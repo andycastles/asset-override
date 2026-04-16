@@ -1,0 +1,21 @@
+{
+  "name": "asset-override",
+  "version": "0.1.0",
+  "description": "Browser extension to redirect asset requests by swapping URL origins",
+  "private": true,
+  "scripts": {
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.318",
+    "@types/firefox-webext-browser": "^120.0.3",
+    "@types/node": "^22.0.0",
+    "@types/webextension-polyfill": "^0.12.5",
+    "esbuild": "^0.25.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "webextension-polyfill": "^0.12.0"
+  }
+}

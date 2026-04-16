@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asset Override — Settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h1 class="header__title">Asset Override</h1>
+      <p class="header__subtitle">Configure URL redirect rules</p>
+    </header>
+
+    <main class="main">
+      <div class="toolbar">
+        <button id="btn-add-group" class="btn btn--primary">+ Add Group</button>
+      </div>
+
+      <div id="groups-list" class="groups-list">
+        <!-- Groups rendered here by JS -->
+      </div>
+
+      <p id="empty-state" class="empty-state" hidden>
+        No groups yet. Click <strong>+ Add Group</strong> to get started.
+      </p>
+    </main>
+
+    <script src="options.js" type="module"></script>
+  </body>
+</html>
