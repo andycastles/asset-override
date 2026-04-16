@@ -5,15 +5,14 @@
   "description": "Redirect asset requests by swapping URL origins based on configurable rules.",
   "permissions": [
     "declarativeNetRequest",
-    "declarativeNetRequestFeedback",
-    "storage",
-    "tabs"
+    "storage"
   ],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background/service-worker.js",
     "type": "module"
   },
+  "devtools_page": "devtools/devtools.html",
   "options_ui": {
     "page": "options/options.html",
     "open_in_tab": true

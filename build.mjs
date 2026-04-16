@@ -13,7 +13,7 @@ mkdirSync(outdir, { recursive: true });
 for (const file of ["manifest.json"]) {
   cpSync(file, join(outdir, file));
 }
-for (const dir of ["icons", "src/options", "src/popup"]) {
+for (const dir of ["icons", "src/options", "src/popup", "src/devtools"]) {
   cpSync(dir, join(outdir, dir.replace("src/", "")), {
     recursive: true,
     filter: (src) => !src.endsWith(".ts"),
@@ -32,6 +32,7 @@ const entryPoints = [
   { in: "src/background/service-worker.ts", out: "background/service-worker" },
   { in: "src/options/options.ts", out: "options/options" },
   { in: "src/popup/popup.ts", out: "popup/popup" },
+  { in: "src/devtools/devtools.ts", out: "devtools/devtools" },
 ];
 
 if (watch) {

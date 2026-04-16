@@ -343,6 +343,48 @@ function buildField(
   return wrapper;
 }
 
+// ── Export / Import ────────────────────────────────────────────────────
+
+function exportSettings(): void {
+  const json = JSON.stringify(config, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "asset-override-settings.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importSettings(file: File): void {
+  const reader = new FileReader();
+  reader.onload = async () => {
+    try {
+      const parsed = JSON.parse(reader.result as string);
+      if (!parsed || !Array.isArray(parsed.groups)) {
+        throw new Error("Invalid settings file");
+      }
+      config = parsed as Config;
+      await setConfig(config);
+      renderAll();
+      saveIndicator.textContent = "✓ Settings imported";
+      saveIndicator.classList.add("save-indicator--saved");
+      setTimeout(() => {
+        saveIndicator.textContent = "";
+        saveIndicator.classList.remove("save-indicator--saved");
+      }, 2000);
+    } catch {
+      saveIndicator.textContent = "✗ Invalid settings file";
+      saveIndicator.classList.add("save-indicator--error");
+      setTimeout(() => {
+        saveIndicator.textContent = "";
+        saveIndicator.classList.remove("save-indicator--error");
+      }, 3000);
+    }
+  };
+  reader.readAsText(file);
+}
+
 // ── Bootstrap ──────────────────────────────────────────────────────────
 
 async function init(): Promise<void> {
@@ -353,6 +395,18 @@ async function init(): Promise<void> {
     config.groups.push(newGroup());
     renderAll();
     scheduleSave();
+  });
+
+  document.getElementById("btn-export")?.addEventListener("click", exportSettings);
+
+  const importFileInput = document.getElementById("input-import-file") as HTMLInputElement;
+  document.getElementById("btn-import")?.addEventListener("click", () => {
+    importFileInput.value = "";
+    importFileInput.click();
+  });
+  importFileInput.addEventListener("change", () => {
+    const file = importFileInput.files?.[0];
+    if (file) importSettings(file);
   });
 }
 
