@@ -5,6 +5,11 @@ export interface RedirectRule {
   type: RuleType;
   /** Wildcard URL pattern for assets to intercept, e.g. https://cdn.example.com/assets/* */
   urlPattern: string;
+  /**
+   * URL patterns that should NOT be redirected even if they match urlPattern.
+   * e.g. https://cdn.example.com/assets/components/navigation/*
+   */
+  exceptions: string[];
 }
 
 export interface Group {

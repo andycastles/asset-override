@@ -275,6 +275,17 @@ body {
   gap: 8px;
 }
 
+/* ── Rule wrapper (rule row + exceptions) ───────────────────────────── */
+.rule-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  background: var(--color-bg);
+}
+
 .rule-row {
   display: flex;
   align-items: center;
@@ -319,6 +330,62 @@ body {
   color: var(--color-text-muted);
   font-style: italic;
   padding: 4px 0;
+}
+
+/* ── Exceptions ─────────────────────────────────────────────────────── */
+.exceptions-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.exceptions-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.exceptions-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.btn--add-exception {
+  font-size: 11px;
+  padding: 2px 6px;
+  color: var(--color-primary);
+}
+.btn--add-exception:hover { color: var(--color-primary-hover); }
+
+.exceptions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.exception-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 8px;
+}
+
+.exception-row__icon {
+  color: var(--color-text-muted);
+  font-size: 13px;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.exception-row__pattern {
+  /* slightly dimmed to differentiate from main rule */
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
 }
 
 .save-indicator {

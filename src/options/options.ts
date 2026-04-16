@@ -19,7 +19,7 @@ function newGroup(): Group {
 }
 
 function newRule(): RedirectRule {
-  return { id: uid(), type: "redirect_origin", urlPattern: "" };
+  return { id: uid(), type: "redirect_origin", urlPattern: "", exceptions: [] };
 }
 
 // ── State ──────────────────────────────────────────────────────────────
@@ -202,6 +202,10 @@ function renderRule(
   rule: RedirectRule,
   container: HTMLElement
 ): HTMLElement {
+  const wrapper = document.createElement("div");
+  wrapper.className = "rule-wrapper";
+
+  // ── Main rule row ──
   const row = document.createElement("div");
   row.className = "rule-row";
 
@@ -232,7 +236,79 @@ function renderRule(
   row.appendChild(typeLabel);
   row.appendChild(patternInput);
   row.appendChild(deleteBtn);
-  return row;
+
+  // ── Exceptions ──
+  const exceptionsSection = document.createElement("div");
+  exceptionsSection.className = "exceptions-section";
+
+  const exceptionsHeader = document.createElement("div");
+  exceptionsHeader.className = "exceptions-header";
+
+  const exceptionsLabel = document.createElement("span");
+  exceptionsLabel.className = "exceptions-label";
+  exceptionsLabel.textContent = "Exceptions";
+
+  const addExceptionBtn = document.createElement("button");
+  addExceptionBtn.className = "btn btn--icon btn--add-exception";
+  addExceptionBtn.title = "Add exception pattern";
+  addExceptionBtn.textContent = "+ exception";
+  addExceptionBtn.addEventListener("click", () => {
+    rule.exceptions.push("");
+    refreshExceptions(rule, exceptionsList);
+    scheduleSave();
+  });
+
+  exceptionsHeader.appendChild(exceptionsLabel);
+  exceptionsHeader.appendChild(addExceptionBtn);
+
+  const exceptionsList = document.createElement("div");
+  exceptionsList.className = "exceptions-list";
+  refreshExceptions(rule, exceptionsList);
+
+  exceptionsSection.appendChild(exceptionsHeader);
+  exceptionsSection.appendChild(exceptionsList);
+
+  wrapper.appendChild(row);
+  wrapper.appendChild(exceptionsSection);
+  return wrapper;
+}
+
+function refreshExceptions(rule: RedirectRule, container: HTMLElement): void {
+  container.innerHTML = "";
+  rule.exceptions.forEach((exc, idx) => {
+    const row = document.createElement("div");
+    row.className = "exception-row";
+
+    const icon = document.createElement("span");
+    icon.className = "exception-row__icon";
+    icon.textContent = "↳";
+    icon.title = "Exception — this pattern will NOT be redirected";
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.className = "rule-row__pattern exception-row__pattern";
+    input.value = exc;
+    input.placeholder = "e.g. https://cdn.example.com/assets/vendor/*";
+    input.addEventListener("input", () => {
+      rule.exceptions[idx] = input.value;
+      scheduleSave();
+    });
+
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "btn btn--icon";
+    removeBtn.title = "Remove exception";
+    removeBtn.textContent = "✕";
+    removeBtn.addEventListener("click", () => {
+      rule.exceptions.splice(idx, 1);
+      refreshExceptions(rule, container);
+      scheduleSave();
+    });
+
+    row.appendChild(icon);
+    row.appendChild(input);
+    row.appendChild(removeBtn);
+    container.appendChild(row);
+  });
 }
 
 function buildField(

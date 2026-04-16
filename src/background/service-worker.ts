@@ -97,6 +97,40 @@ function buildRules(
         transform.port = parsed.port;
       }
 
+      const resourceTypes = [
+        "main_frame",
+        "sub_frame",
+        "stylesheet",
+        "script",
+        "image",
+        "font",
+        "object",
+        "xmlhttprequest",
+        "ping",
+        "csp_report",
+        "media",
+        "websocket",
+        "other",
+      ] as chrome.declarativeNetRequest.ResourceType[];
+
+      // Exception rules (priority 2) must be added before the redirect rule so
+      // that if a URL matches an exception pattern the allow action wins.
+      for (const exceptionPattern of rule.exceptions ?? []) {
+        if (!exceptionPattern.trim()) continue;
+        rules.push({
+          id: nextRuleId++,
+          priority: 2,
+          action: {
+            type: "allow" as chrome.declarativeNetRequest.RuleActionType,
+          },
+          condition: {
+            ...condition,
+            urlFilter: toUrlFilter(exceptionPattern),
+            resourceTypes,
+          },
+        });
+      }
+
       rules.push({
         id: nextRuleId++,
         priority: 1,
@@ -107,21 +141,7 @@ function buildRules(
         condition: {
           ...condition,
           urlFilter: toUrlFilter(rule.urlPattern),
-          resourceTypes: [
-            "main_frame",
-            "sub_frame",
-            "stylesheet",
-            "script",
-            "image",
-            "font",
-            "object",
-            "xmlhttprequest",
-            "ping",
-            "csp_report",
-            "media",
-            "websocket",
-            "other",
-          ] as chrome.declarativeNetRequest.ResourceType[],
+          resourceTypes,
         },
       });
     }
